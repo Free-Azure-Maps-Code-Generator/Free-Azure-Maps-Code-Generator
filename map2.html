@@ -23,40 +23,30 @@
         (function ($) {
             var params = [];
             location.search.substr(1).split("&").forEach((i) => { let x = i.split("="); params[x[0]] = x[1]; })
-
-            const _s = Array(params['s']);
+            const _s = String(params['s']);
             const _ic = String(params['ic']);
             const _z = parseInt(params['zoom']);
             let _width = parseInt(params['width']);
             let _height = parseInt(params['height']);
+            let _coordinate = _s.split(',').map(parseFloat)
+            function GetMap() {
+                map = new atlas.Map('myMap', {
+                    center: _coordinate,
+                    zoom: _z,
+                    view: 'Auto',
+                    style: _ic,
 
-            var urlAPI = "https://atlas.microsoft.com/search/address/reverse/json?&subscription-key=35t-hsAMcragzjbqAFxSo9aeyAPLqneR-hYrhkE1iEg&api-version=1.0&language=en-US&query=";
-
-            $.getJSON(urlAPI + _s, function (json) {
-
-            })
-                .done(function (data) {
-                    var src = data.addresses[0].position;
-                    var ids = src.split(',').map(parseFloat);
-                    function GetMap() {
-                        map = new atlas.Map('myMap', {
-                            center: ids,
-                            zoom: _z,
-                            view: 'Auto',
-                            style: _ic,
-
-                            authOptions: {
-                                authType: 'subscriptionKey',
-                                subscriptionKey: '35t-hsAMcragzjbqAFxSo9aeyAPLqneR-hYrhkE1iEg'
-                            }
-                        });
-                        $("#myMap").attr("width", _width)
-                            .attr("height", _height)
-                            .appendTo('#myMap');
+                    authOptions: {
+                        authType: 'subscriptionKey',
+                        subscriptionKey: '35t-hsAMcragzjbqAFxSo9aeyAPLqneR-hYrhkE1iEg'
                     }
-                    console.log(typeof ids)
-                    GetMap();
-                })
+                });
+                $("#myMap").attr("width", _width)
+                    .attr("height", _height)
+                    .appendTo('#myMap');
+            }
+            GetMap();
+
         })(jQuery)
             // code: <div class="map"><iframe src="https://maps.google.com/maps?q=kirovograd&t=k&z=16&ie=UTF8&iwloc=&output=embed&hl=en" id="gmap" style="border:none;width:100%" width="500" height="500"></iframe><a href="https://embedgooglemap.github.io" style="display:none;">map generator</a></div>
     </script>
